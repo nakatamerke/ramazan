@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramazan Bereketi</title>
+    
+    <!-- Tailwind CSS (Hızlı Stil) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons (İkonlar İçin) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Animasyonlar */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+            50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+        }
+
+        .animate-fadeIn { animation: fadeIn 0.5s ease-out; }
+        .animate-slideUp { animation: slideUp 0.5s ease-out; }
+        .animate-bounce-slow { animation: bounce-slow 2s infinite; }
+
+        /* Kaydırma Çubuğu Gizleme (Estetik İçin) */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 flex flex-col items-center p-4 relative overflow-x-hidden">
+
+    <!-- Yeşil Header Arka Planı -->
+    <div class="absolute top-0 left-0 w-full h-64 bg-emerald-700 rounded-b-[40px] shadow-lg z-0"></div>
+
+    <div class="w-full max-w-md relative z-10 mt-6 pb-12">
+
+        <!-- Geliştirici Tanıtım Kartı -->
+        <a href="https://www.instagram.com/ekrematakan?igsh=MTNuOHpsZnd6ZHhheQ==" target="_blank" rel="noopener noreferrer" class="mx-auto mb-6 block w-fit">
+            <div class="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg border border-emerald-100 flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 group cursor-pointer">
+                <div class="bg-gradient-to-tr from-purple-500 to-orange-500 p-1.5 rounded-full text-white shadow-sm">
+                    <i data-lucide="instagram" class="w-4 h-4"></i>
+                </div>
+                <div class="text-left leading-tight">
+                    <p class="text-[10px] text-emerald-800 font-bold uppercase tracking-wider">Hazırlayan</p>
+                    <p class="text-xs font-bold text-slate-700 group-hover:text-emerald-600 transition-colors">Ekrem Atakan</p>
+                </div>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform ml-1"></i>
+            </div>
+        </a>
+
+        <!-- Header Logo Area -->
+        <div class="flex flex-col items-center justify-center gap-3 mb-8 text-center">
+            <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-sm shadow-xl ring-4 ring-emerald-600/30">
+                <i data-lucide="utensils" class="w-8 h-8 text-white"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-white tracking-wide">Ramazan Bereketi</h1>
+                <div class="flex items-center justify-center gap-2 text-emerald-100 text-xs mt-1 font-medium bg-emerald-800/30 px-3 py-1 rounded-full border border-emerald-600/30">
+                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                    <span id="currentDateDisplay">...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANA İŞLEM KARTI -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 min-h-[400px]">
+            <div class="p-6">
+                
+                <!-- STEP 1: GİRİŞ EKRANI -->
+                <div id="step1" class="space-y-8 animate-fadeIn">
+                    
+                    <!-- Soru 1 -->
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 text-lg font-bold text-slate-800">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-sm">1</div>
+                            Bu akşam kaç kişiyiz?
+                        </label>
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 hover:border-emerald-300 transition-colors">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-slate-500 font-medium text-sm">Kişi Sayısı</span>
+                                <span id="peopleCountDisplay" class="bg-emerald-600 text-white px-4 py-1.5 rounded-lg font-bold text-xl shadow-md">2</span>
+                            </div>
+                            <input type="range" id="peopleRange" min="1" max="15" value="2" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+                        </div>
+                    </div>
+
+                    <!-- Soru 2 -->
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 text-lg font-bold text-slate-800">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-sm">2</div>
+                            Yemek için ne kadar bütçemiz var?
+                        </label>
+                        <div class="relative">
+                            <input type="number" id="budgetInput" placeholder="Örn: 2000" class="w-full pl-5 pr-12 py-4 rounded-2xl border-2 border-slate-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all text-2xl font-bold text-slate-700 placeholder:text-slate-300">
+                            <span class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xl">TL</span>
+                        </div>
+                        <p class="text-xs text-slate-400 pl-2">*Alışveriş için harcamayı düşündüğün toplam para.</p>
+                    </div>
+
+                    <button id="calcBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-emerald-200 transition-all active:scale-95 flex items-center justify-center gap-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <i data-lucide="calculator" class="w-6 h-6"></i>
+                        Hesapla Bakalım
+                    </button>
+                </div>
+
+                <!-- STEP 2: SONUÇ EKRANI (Başta Gizli) -->
+                <div id="step2" class="hidden space-y-6 animate-slideUp">
+                    
+                    <!-- 1. KISIM: MENÜ LİSTESİ -->
+                    <div class="bg-white border-2 border-orange-100 rounded-2xl shadow-sm overflow-hidden mb-6 relative">
+                        <div class="bg-orange-50 p-4 border-b border-orange-100 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-orange-800 flex items-center gap-2">
+                                    <i data-lucide="utensils" class="w-5 h-5"></i>
+                                    İftar Menümüz
+                                </h3>
+                                <p class="text-xs text-orange-600 mt-0.5 ml-7">Tarif için yemeğe tıkla 👇</p>
+                            </div>
+                            <button id="refreshMenuBtn" class="text-orange-600 bg-white p-2 rounded-lg border border-orange-200 text-xs font-bold hover:bg-orange-100 transition-colors flex items-center gap-1 active:scale-95 shadow-sm">
+                                <i data-lucide="refresh-ccw" class="w-3 h-3"></i> Değiştir
+                            </button>
+                        </div>
+                        
+                        <!-- Menü İçeriği (JS ile Doldurulacak) -->
+                        <div id="menuContainer" class="p-4 space-y-3"></div>
+                    </div>
+
+                    <!-- 2. KISIM: HESAP VE BAĞIŞ -->
+                    <div id="resultCard" class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-2xl p-5 shadow-sm text-center">
+                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
+                            Bu zengin iftar sofrasını <strong id="resPeople">2 kişilik</strong> bir ziyafete dönüştürmek, güncel market fiyatlarıyla ortalama <strong id="resCost">0 TL</strong> tutuyor.
+                        </p>
+
+                        <!-- Bağış Alanı (JS ile Gösterilecek) -->
+                        <div id="donationSection" class="hidden bg-white rounded-xl border-2 border-emerald-100 p-4 shadow-sm relative overflow-hidden">
+                            <div class="flex flex-col items-center gap-2 mb-3">
+                                <div class="bg-emerald-100 p-2 rounded-full text-emerald-700">
+                                    <i data-lucide="hand-heart" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Cebinde Kalan</p>
+                                    <p id="resDonation" class="text-3xl font-black text-emerald-600">0 TL</p>
+                                </div>
+                            </div>
+                            
+                            <p class="text-sm text-slate-600 mb-4 font-medium">
+                                "Sofranı kurdun, şimdi gönülleri yapma vakti."
+                                <br><span class="text-xs font-normal text-slate-500">Bu bereketi paylaşmak ister misin?</span>
+                            </p>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <a href="https://bagis.tdv.org/fitre" target="_blank" class="flex flex-col items-center justify-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 px-2 rounded-xl transition-colors text-center shadow-sm active:scale-95 group">
+                                    <i data-lucide="heart-handshake" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                                    Fitre Bağışı Yap
+                                    <span class="opacity-70 text-[10px] font-normal flex items-center gap-0.5">(Linke Git <i data-lucide="external-link" class="w-2 h-2"></i>)</span>
+                                </a>
+                                <a href="https://bagis.tdv.org/genel-bagis" target="_blank" class="flex flex-col items-center justify-center gap-1 bg-white border-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50 text-xs font-bold py-3 px-2 rounded-xl transition-colors text-center shadow-sm active:scale-95 group">
+                                    <i data-lucide="heart" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                                    Sadaka Ver
+                                    <span class="opacity-70 text-[10px] font-normal flex items-center gap-0.5">(Linke Git <i data-lucide="external-link" class="w-2 h-2"></i>)</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. KISIM: GÜNÜN MANEVİ NOTU -->
+                    <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 flex gap-3 items-start">
+                        <i data-lucide="quote" class="w-6 h-6 text-emerald-400 shrink-0"></i>
+                        <div>
+                            <p class="text-xs font-bold text-emerald-800 uppercase mb-1">Günün Manevi Notu</p>
+                            <p id="spiritualNote" class="text-sm text-emerald-700 italic">"..."</p>
+                        </div>
+                    </div>
+
+                    <!-- ALT BUTONLAR -->
+                    <div class="grid grid-cols-1 gap-3">
+                        <button id="whatsappBtn" class="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 rounded-xl shadow-md shadow-green-100 transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <i data-lucide="message-circle" class="w-5 h-5 fill-current"></i>
+                            WhatsApp'ta Paylaş
+                        </button>
+                        <button id="resetBtn" class="w-full text-slate-400 hover:text-slate-600 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-1 active:scale-95">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i> Başka Hesap Yap
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TARİF MODALI (POP-UP) -->
+        <div id="recipeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fadeIn">
+            <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative" onclick="event.stopPropagation()">
+                <div class="bg-orange-50 p-4 border-b border-orange-100 flex justify-between items-center">
+                    <h3 id="modalTitle" class="font-bold text-orange-900 flex items-center gap-2">
+                        <i data-lucide="chef-hat" class="w-5 h-5 text-orange-500"></i>
+                        Yemek Adı
+                    </h3>
+                    <button id="closeModalBtn" class="p-1 rounded-full hover:bg-orange-200 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5 text-orange-800"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="bg-orange-100 p-2 rounded-lg">
+                            <i data-lucide="book-open" class="w-6 h-6 text-orange-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Nasıl Yapılır?</p>
+                            <p id="modalDesc" class="text-slate-700 text-sm leading-relaxed">Tarif burada...</p>
+                        </div>
+                    </div>
+                    <button id="closeModalMainBtn" class="w-full bg-orange-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-orange-700 transition-colors">
+                        Tamamdır Şef! 👨‍🍳
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DİKKAT ÇEKİCİ NUDGE (AŞAĞI BAK UYARISI) -->
+        <div id="nudge" class="hidden fixed inset-0 z-[60] pointer-events-none flex flex-col items-center justify-end pb-12 bg-black/20 backdrop-blur-[2px] animate-fadeIn transition-opacity duration-500">
+             <div class="bg-emerald-600 text-white px-6 py-4 rounded-2xl shadow-2xl animate-bounce-slow flex flex-col items-center gap-2 max-w-[80%] text-center">
+               <span class="font-bold text-lg">Menün Hazır! 😋</span>
+               <span class="text-sm font-medium opacity-90 flex items-center gap-2">
+                 Artan bereketi senin için aşağıya ekledik
+                 <i data-lucide="arrow-down" class="w-4 h-4"></i>
+               </span>
+             </div>
+        </div>
+
+    </div>
+
+    <div class="mt-auto py-6 text-center z-10 opacity-70">
+        <p class="text-xs text-slate-500 font-medium">Hayırlı Ramazanlar ✨</p>
+    </div>
+
+    <!-- JAVASCRIPT MANTIĞI -->
+    <script>
+        // --- VERİTABANI ---
+        const MODEST_MEAL_COST_PER_PERSON = 315;
+
+        const SPIRITUAL_NOTES = [
+            "Komşusu açken tok yatan bizden değildir.",
+            "Veren el, alan elden üstündür.",
+            "Az sadaka çok belayı def eder.",
+            "Tebessüm etmek sadakadır.",
+            "Oruç sabrın yarısıdır.",
+            "İsraf etmeyin, Allah israf edenleri sevmez.",
+            "En hayırlı sofra, üzerinde elin çok olduğu sofradır."
+        ];
+
+        const MENU_DATABASE = [
+            {
+                soup: { name: "Çeşmi Nigar Çorbası", recipe: "Mercimeği soğanla haşla. Ayrı yerde un, yumurta sarısı, limon ve sütle terbiye yap. Çorbaya yavaşça ekle, üzerine naneli yağ yak." },
+                main: { name: "Hünkar Beğendi (Tavuklu)", recipe: "Tavukları sotele. Közlenmiş patlıcanı ez, beşamel sosla (un, yağ, süt) karıştırıp beğendi yap. Tavukları üzerine koy." },
+                side: { name: "Mevsim Salatası", recipe: "Marul, roka, havuç ne varsa doğra. Sosu için: Limon, zeytinyağı, az nar ekşisi ve tuzu çırpıp dök." },
+                dessert: { name: "Güllaç", recipe: "Sütü şekerle ısıt (kaynatma, el yakmasın). Güllaç yapraklarını ıslatıp tepsiye diz, araya ceviz serp. Kalan sütü dök, dinlendir." },
+                drink: { name: "Gül Şerbeti", recipe: "Gül yapraklarını limon tuzu ve şekerle ov, su ekleyip beklet. Süzünce rengi pembeleşir, buzla servis et." },
+                tip: "Beğendi için patlıcanları ocakta közlersen o is tadı yemeği saray mutfağına çevirir.",
+            },
+            {
+                soup: { name: "Süzme Mercimek Çorbası", recipe: "Mercimek, patates, havucu haşla. Blenderdan geçir. Kıvamı koyuysa sıcak su ekle. Üzerine tereyağlı toz biber dök." },
+                main: { name: "İslim Kebabı", recipe: "Köfteleri kızart. Patlıcanları uzun dilimleyip kızart. İki patlıcanı artı (+) yap, ortasına köfte koy, kapat. Kürdanla tuttur, fırınla." },
+                side: { name: "Şehriyeli Pirinç Pilavı", recipe: "Şehriyeyi kavur, yıkanmış pirinci ekle. 1 bardak pirince 1.5 bardak sıcak su, tuz ve 2 damla limon sık. Demlenmeye bırak." },
+                dessert: { name: "Fırın Sütlaç", recipe: "Pirinci haşla. Süt, şeker ve nişastayı ekleyip pişir. Kaselere koy, fırının sadece üstünü açıp üzerini kızart." },
+                drink: { name: "Reyhan Şerbeti", recipe: "Mor reyhanı sıcak suya koy, şeker ve limon tuzu ekle. Rengi suya çıkınca süz. Soğuyunca mis gibi olur." },
+                tip: "Reyhan şerbetine atacağın bir tane karanfil, ferahlığı ikiye katlar.",
+            },
+            {
+                soup: { name: "Lebeniye Çorbası", recipe: "Nohut ve buğdayı haşla. Köfteleri minik yuvarlayıp kızart. Yoğurt, un ve yumurta ile terbiye yapıp hepsini karıştır." },
+                main: { name: "Orman Kebabı", recipe: "Kuşbaşı eti düdüklüde pişir. Patates, havuç ve bezelyeyi küp doğrayıp ekle. Salçalı suyla sebzeler yumuşayana kadar pişir." },
+                side: { name: "Bulgur Pilavı", recipe: "Soğan ve biberi kavur, salça ekle. Bulguru koy, üzerini geçecek kadar sıcak su ve tuz at. Suyunu çekene kadar pişir." },
+                dessert: { name: "Kalburabastı", recipe: "Hamuru yoğur, rende üzerinde şekil verip fırınla. Sıcak tatlıya soğuk şerbet dök." },
+                drink: { name: "Naneli Ayran", recipe: "Yoğurdu suyla çırp. İçine kuru nane ve azıcık tuz at. Bol köpüklü olsun." },
+                tip: "Orman kebabında bezelyeyi en son eklersen dağılmaz, rengi canlı kalır.",
+            },
+            {
+                soup: { name: "Ezogelin Çorbası", recipe: "Mercimek, pirinç, bulguru haşla. Ayrı tavada soğan, nane ve salçayı kavurup çorbaya dök. Özleşene kadar kaynat." },
+                main: { name: "Hasanpaşa Köftesi", recipe: "Köfteleri çanak şeklinde yapıp fırınla. Ortasına patates püresi sık, tekrar fırınla. En son salçalı sos dök." },
+                side: { name: "Gavurdağı Salatası", recipe: "Domates, biber, soğanı çok küçük (zırh) doğra. Bol ceviz, nar ekşisi, zeytinyağı ve sumakla harmanla." },
+                dessert: { name: "Trileçe (Karamelli)", recipe: "Pandispanyayı pişir. Süt, krema ve şekerle ıslat. Üzerine hazır karamel sos veya ev yapımı karamel dök." },
+                drink: { name: "Kızılcık Şerbeti", recipe: "Kızılcıkları kaynat, süzgeçten geçirip posasını al. Şekerle tatlandırıp soğut." },
+                tip: "Köftelerin ortasını çukur yapıp püreyi oraya sıkarsan sunumun restoran kalitesinde olur.",
+            },
+            {
+                soup: { name: "Tutmaç Çorbası", recipe: "Yeşil mercimeği haşla, erişteyi ekle. Yoğurtlu terbiye yapıp bağla. Üzerine bol naneli yağ gezdir." },
+                main: { name: "Piliç Topkapı", recipe: "Kemiksiz tavuk budunu aç. İçine kuş üzümlü iç pilav koyup sar. Fırın poşetinde veya tepside nar gibi kızart." },
+                side: { name: "Yoğurtlu Semizotu", recipe: "Semizotunu yıka, doğra (saplarıyla). Sarımsaklı yoğurtla karıştır. Üzerine pul biber serp." },
+                dessert: { name: "Keşkül-ü Fukara", recipe: "Süt, şeker, pirinç unu ve toz bademi pişir. Kaselere dök. Üstüne file badem veya fıstık serp." },
+                drink: { name: "Demirhindi Şerbeti", recipe: "Aktardan alacağın demirhindiyi suda beklet, kaynat. İçine tarçın, karanfil at. Süzüp soğut." },
+                tip: "Tavuk butlarını açtırıp iç pilavla doldurmak, bütün tavuktan daha ekonomik ve şıktır.",
+            },
+            {
+                soup: { name: "Kaşarlı Domates Çorbası", recipe: "Unu tereyağında kokusu çıkana kadar kavur. Salça ve rendelenmiş domates ekle. Süt ve suyla aç. Kaşarla servis et." },
+                main: { name: "Ali Nazik", recipe: "Köz patlıcanı süzme yoğurt ve sarımsakla karıştır. Üzerine kavrulmuş kıymalı sos dök." },
+                side: { name: "Tırnak Pidesi", recipe: "Fırından hazır alıp ısıt veya evde un-su-maya ile hamur yapıp tırnak şekli vererek pişir." },
+                dessert: { name: "Sultan Sarması", recipe: "Kakaolu muhallebi yap. Hindistan cevizi serpilmiş tepsiye dök. Soğuyunca krem şanti sür, rulo yap." },
+                drink: { name: "Naneli Limonata", recipe: "Limon kabuklarını şekerle ov. Suyunu sık, su ekle. Taze nane yapraklarıyla bekletip süz." },
+                tip: "Ali Nazik yoğurduna mutlaka sarımsak ve azıcık süzme yoğurt ekle, kıvamı koyu olsun.",
+            },
+            {
+                soup: { name: "Anadolu Çorbası", recipe: "Buğday, nohut, mercimeği haşla. Salçalı, soğanlı, naneli sos yapıp karıştır. Doyurucu bir kış çorbası." },
+                main: { name: "Fırında Sebzeli Dizme", recipe: "Köfte, patates, patlıcanı halka doğra. Tepsiye sırayla (bir sebze bir köfte) diz. Salçalı su döküp fırınla." },
+                side: { name: "Cacık", recipe: "Salatalıkları rendeleme, minik küp doğra (sulanmasın). Süzme yoğurt, sarımsak, kuru nane ve az zeytinyağı ekle." },
+                dessert: { name: "Revani", recipe: "Yumurta, şeker, yoğurt, irmik ve unu çırp pişir. Fırından çıkınca soğuk şerbeti dök." },
+                drink: { name: "Hibiskus Şerbeti", recipe: "Kuru hibiskusu sıcak suya at (rengi hemen çıkar). Şeker, çubuk tarçın ve limon ekle. Soğuk iç." },
+                tip: "Hibiskus şerbetine tarçın çubuğu atarsan rengi yakut gibi, kokusu mis gibi olur.",
+            },
+            {
+                soup: { name: "Yayla Çorbası", recipe: "Pirinci haşla. Yoğurt, yumurta, unla terbiye yap. Kesilmemesi için çorba suyundan terbiyeye ekle, ılıştırıp dök." },
+                main: { name: "Etli Kuru Fasulye", recipe: "Fasulyeyi akşamdan ıslat. Soğan ve eti kavur, salça ekle. Fasulyeyi ve sıcak suyu koy, kısık ateşte pişir." },
+                side: { name: "Pirinç Pilavı & Turşu", recipe: "Pirinci sıcak suda beklet. Tereyağında kavur. Bire bir buçuk ölçü sıcak suyla pişir. Yanına kornişon turşu." },
+                dessert: { name: "Tahinli Kabak Tatlısı", recipe: "Kabakları şekerle beklet, kendi suyuyla yumuşayana kadar pişir. Serviste bol tahin ve ceviz dök." },
+                drink: { name: "Üzüm Hoşafı", recipe: "Kuru üzümleri yıka, su ve şekerle kaynat. Soğuyunca kaselere paylaştır." },
+                tip: "Kabak tatlısını pişirirken şekeri bir gece önceden döküp bekletirsen su eklemene gerek kalmaz.",
+            },
+            {
+                soup: { name: "Tarhana Çorbası", recipe: "Tarhanayı soğuk suda erit. Salça, nane ve sarımsağı kavur. Tarhanalı suyu ekle, koyulaşana kadar karıştır." },
+                main: { name: "Tepsi Kebabı", recipe: "Kıyma, soğan, biber, maydanoz ve baharatı yoğur. Tepsiye incecik yay. Üzerine domates biber diz, fırınla." },
+                side: { name: "Soğan Piyazı", recipe: "Soğanları piyazlık doğra, tuzla ov (acısı çıksın). Sumak, maydanoz ve zeytinyağı ile karıştır." },
+                dessert: { name: "Yalancı Künefe", recipe: "Kadayıfı tereyağıyla harmanla. Tavaya yarısını bas, araya dil peyniri koy, kalanı bas. İki yüzünü de kızart, şerbetle." },
+                drink: { name: "Şalgam Suyu", recipe: "Hazır alacaksan acılı/acısız tercihine dikkat et. Evde yapmak zor, fermente olması gerekir." },
+                tip: "Tepsi kebabının harcına kuyruk yağı veya tereyağı parçaları koyarsan kurumaz.",
+            },
+            {
+                soup: { name: "Kremalı Mantar Çorbası", recipe: "Mantarları ince doğra, sotele. Unu kavur, süt ve su ekle. Kaynayınca mantarları at. Arzuya göre krema ekle." },
+                main: { name: "Kıymalı Karnıyarık", recipe: "Patlıcanları alacalı soy, kızart. Ortasını aç. Soğanlı kıymalı harcı doldur. Salçalı suyla fırınla veya tencerede pişir." },
+                side: { name: "Şehriye Pilavı", recipe: "Arpa şehriyeyi tereyağında rengi dönene kadar kavur. Sıcak su ekle, suyunu çekene kadar pişir." },
+                dessert: { name: "Sakızlı Muhallebi", recipe: "Süt, un, şeker ve nişastayı pişir. İnmeye yakın damla sakızı at. Mikserle 5 dk çırp ki sakız gibi uzasın." },
+                drink: { name: "Vişne Şerbeti", recipe: "Dondurulmuş veya taze vişneyi şekerle kaynat. Süzüp soğut." },
+                tip: "Karnıyarığın sosuna bir tutam şeker atarsan domatesin ekşiliğini alır.",
+            },
+            {
+                soup: { name: "Düğün Çorbası", recipe: "Gerdan etini haşla, didik. Suyuna un ve yoğurtlu terbiye yap. Eti geri ekle. Üzerine tereyağlı biber yak." },
+                main: { name: "Kadınbudu Köfte", recipe: "Kıymanın yarısını kavur, yarısı çiğ kalsın. Haşlanmış pirinçle yoğur. Galeta ununa ve yumurtaya bulayıp kızart." },
+                side: { name: "Piyaz & Patates", recipe: "Haşlanmış fasulye, soğan, sirke, zeytinyağı. Yanına elma dilim patates kızartması." },
+                dessert: { name: "İrmik Helvası", recipe: "İrmiği ve fıstığı tereyağında rengi koyulaşana kadar (sabırla) kavur. Sıcak şerbeti dök, kapağını kapat demlensin." },
+                drink: { name: "Osmanlı Şerbeti", recipe: "Tarçın, karanfil, zencefil, hibiskus ve şekeri kaynat. Tam bir şifa deposudur." },
+                tip: "Kadınbudu köfte yaparken pirinci tam değil, hafif diri haşla ki köfte içinde lapa olmasın.",
+            },
+            {
+                soup: { name: "Lokanta Usulü Mercimek", recipe: "Sarı mercimek, patates, soğan. Hepsini haşla, blenderdan geçir, süzgeçten süz (pürüzsüz olsun). Limonla servis et." },
+                main: { name: "Sultan Kebabı (Yufkalı)", recipe: "Tavuklu bezelyeli harç hazırla. Yufkayı kaseye koy, harcı doldur, kapat, ters çevir. Üzerine beşamel sos dök fırınla." },
+                side: { name: "Haydari", recipe: "Süzme yoğurt, ezilmiş beyaz peynir, sarımsak, kuru nane ve dereotu. Karıştır, üzerine zeytinyağı gezdir." },
+                dessert: { name: "Supangle", recipe: "Sütlü kakaolu muhallebi yap. Kasenin dibine kek parçası koy, üstüne muhallebiyi dök." },
+                drink: { name: "Meyve Kompostosu", recipe: "Evdeki karışık meyveleri (elma, armut) küp doğra, şekerli suyla hafif yumuşayana kadar pişir." },
+                tip: "Yufkaları beşamel sosla kapatırsan fırında nar gibi kızarır.",
+            },
+            {
+                soup: { name: "Sebze Çorbası", recipe: "Kabak, havuç, patatesi rendele, az yağda çevir. Un serpip kavur, su ve süt ekle. Dereotu ile servis et." },
+                main: { name: "Tavuklu Çökertme", recipe: "Kibrit patatesleri kızart. Üzerine sarımsaklı yoğurt dök. En üste jülyen doğranmış soslu tavukları koy." },
+                side: { name: "Roka Salatası", recipe: "Roka, domates, ceviz ve tulum peyniri. Sosu için balzamik sirke ve zeytinyağı." },
+                dessert: { name: "Kazandibi", recipe: "Tepsiye pudra şekeri serpip yak (karamelize et). Muhallebiyi üzerine dök. Soğuyunca spatula ile kazıyarak rulo yap." },
+                drink: { name: "Koruk Şerbeti", recipe: "Koruk (olmamış üzüm) suyunu sık, su ve şekerle karıştır. Ekşimsi harika bir tadı vardır." },
+                tip: "Patatesleri kibrit çöpü kadar ince doğrayıp kızartırsan çıtır çıtır olur.",
+            },
+            {
+                soup: { name: "Yuvalama Çorbası", recipe: "Zahmetlidir ama hazır yuvalama alabilirsin. Nohut ve etle pişir, süzme yoğurtlu naneli sos yap." },
+                main: { name: "Biber Dolması", recipe: "Pirinç, soğan, salça, nane, kuş üzümü ile iç hazırla. Biberleri doldur. Tencereye diz, yarısına kadar suyla pişir." },
+                side: { name: "Yoğurt", recipe: "Ev yoğurdu veya tava yoğurdu. Dolmanın en iyi eşlikçisidir." },
+                dessert: { name: "Şekerpare", recipe: "Hamuru yoğur, yuvarlak yap, ortasına fındık batır. Fırınla. Şerbeti sıcak dök." },
+                drink: { name: "Erik Şerbeti", recipe: "Mürdüm eriği veya kırmızı eriği kaynat, süz. Rengi kıpkırmızı olur." },
+                tip: "Dolmaların içine bir tutam nane ve kuş üzümü, lezzeti bambaşka bir seviyeye taşır.",
+            },
+            {
+                soup: { name: "Bamya Çorbası", recipe: "Konya usulü; kuru bamyaları haşla (ipleri temizle). Kuşbaşı etle limonlu suyun içinde pişir." },
+                main: { name: "Belan Tava", recipe: "Kuzu eti, sarımsak, biber, domates ve kuyruk yağını tavaya diz. Taş fırında veya ev fırınında ağır ağır pişir." },
+                side: { name: "Bulgur Pilavı", recipe: "İri bulguru (başbaşı) tereyağında çevir, et suyuyla pişir." },
+                dessert: { name: "Halka Tatlısı", recipe: "Sokak lezzetidir, evde yapmak zordur. Hazır alıp çıtır çıtır yiyebilirsin." },
+                drink: { name: "Köpüklü Ayran", recipe: "Maden suyu (soda) ile yoğurdu çırparsan inanılmaz kabarır." },
+                tip: "Bamyaların sünmemesi için limonlu suda bekletip öyle pişir.",
+            }
+        ];
+
+        // --- STATE DEĞİŞKENLERİ ---
+        let state = {
+            peopleCount: 2,
+            budget: '',
+            menuIndex: 0,
+            noteIndex: 0
+        };
+
+        // --- DOM ELEMENTLERİ ---
+        const els = {
+            step1: document.getElementById('step1'),
+            step2: document.getElementById('step2'),
+            peopleRange: document.getElementById('peopleRange'),
+            peopleCountDisplay: document.getElementById('peopleCountDisplay'),
+            budgetInput: document.getElementById('budgetInput'),
+            calcBtn: document.getElementById('calcBtn'),
+            menuContainer: document.getElementById('menuContainer'),
+            resPeople: document.getElementById('resPeople'),
+            resCost: document.getElementById('resCost'),
+            resDonation: document.getElementById('resDonation'),
+            donationSection: document.getElementById('donationSection'),
+            spiritualNote: document.getElementById('spiritualNote'),
+            whatsappBtn: document.getElementById('whatsappBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            refreshMenuBtn: document.getElementById('refreshMenuBtn'),
+            recipeModal: document.getElementById('recipeModal'),
+            modalTitle: document.getElementById('modalTitle'),
+            modalDesc: document.getElementById('modalDesc'),
+            closeModalBtn: document.getElementById('closeModalBtn'),
+            closeModalMainBtn: document.getElementById('closeModalMainBtn'),
+            nudge: document.getElementById('nudge'),
+            currentDateDisplay: document.getElementById('currentDateDisplay')
+        };
+
+        // --- BAŞLANGIÇ AYARLARI ---
+        function init() {
+            // Tarih
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            els.currentDateDisplay.textContent = today.toLocaleDateString('tr-TR', options);
+
+            // İkonları oluştur
+            lucide.createIcons();
+
+            // Event Listeners
+            els.peopleRange.addEventListener('input', (e) => {
+                state.peopleCount = parseInt(e.target.value);
+                els.peopleCountDisplay.textContent = state.peopleCount;
+            });
+
+            els.budgetInput.addEventListener('input', (e) => {
+                state.budget = e.target.value;
+                if(state.budget && state.budget > 0) {
+                    els.calcBtn.disabled = false;
+                } else {
+                    els.calcBtn.disabled = true;
+                }
+            });
+
+            els.calcBtn.addEventListener('click', handleCalculate);
+            els.resetBtn.addEventListener('click', handleReset);
+            els.refreshMenuBtn.addEventListener('click', refreshMenu);
+            els.whatsappBtn.addEventListener('click', shareOnWhatsApp);
+            
+            // Modal Kapatma
+            els.closeModalBtn.addEventListener('click', closeModal);
+            els.closeModalMainBtn.addEventListener('click', closeModal);
+            els.recipeModal.addEventListener('click', (e) => {
+                if(e.target === els.recipeModal) closeModal();
+            });
+        }
+
+        // --- FONKSİYONLAR ---
+        function handleCalculate() {
+            if (!state.budget || state.budget <= 0) return;
+
+            // Rastgele Seçim
+            state.menuIndex = Math.floor(Math.random() * MENU_DATABASE.length);
+            state.noteIndex = Math.floor(Math.random() * SPIRITUAL_NOTES.length);
+
+            renderStep2();
+
+            // Ekran Geçişi
+            els.step1.classList.add('hidden');
+            els.step2.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Nudge (Uyarı) Gösterimi
+            const totalCost = state.peopleCount * MODEST_MEAL_COST_PER_PERSON;
+            const userBudget = parseFloat(state.budget);
+            const isSurplus = (userBudget - totalCost) > 50;
+
+            if(isSurplus) {
+                els.nudge.classList.remove('hidden');
+                setTimeout(() => {
+                    els.nudge.classList.add('hidden');
+                }, 4000);
+            }
+        }
+
+        function handleReset() {
+            state.budget = '';
+            els.budgetInput.value = '';
+            els.calcBtn.disabled = true;
+            
+            els.step2.classList.add('hidden');
+            els.step1.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function refreshMenu() {
+            state.menuIndex = (state.menuIndex + 1) % MENU_DATABASE.length;
+            renderMenu();
+            renderIcons(); // İkonları tekrar oluştur
+        }
+
+        function renderStep2() {
+            // Hesaplama
+            const totalCost = state.peopleCount * MODEST_MEAL_COST_PER_PERSON;
+            const userBudget = parseFloat(state.budget);
+            const donationAmount = userBudget - totalCost;
+            
+            // Metinler
+            els.resPeople.textContent = `${state.peopleCount} kişilik`;
+            els.resCost.textContent = `${totalCost} TL`;
+            els.resDonation.textContent = `${donationAmount} TL`;
+            els.spiritualNote.textContent = `"${SPIRITUAL_NOTES[state.noteIndex]}"`;
+
+            // Bağış Bölümü Görünürlüğü
+            if(donationAmount > 50) {
+                els.donationSection.classList.remove('hidden');
+            } else {
+                els.donationSection.classList.add('hidden');
+            }
+
+            renderMenu();
+            renderIcons();
+        }
+
+        function renderMenu() {
+            const menu = MENU_DATABASE[state.menuIndex];
+            els.menuContainer.innerHTML = '';
+
+            const createRow = (iconName, label, item, highlight = false) => {
+                const div = document.createElement('div');
+                div.className = `group flex items-center justify-between p-2 rounded-xl cursor-pointer hover:bg-slate-50 transition-all border border-transparent hover:border-orange-100 active:scale-[0.98] ${highlight ? 'bg-orange-50/50' : ''}`;
+                div.onclick = () => openModal(item);
+                
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="text-xl bg-white w-10 h-10 flex items-center justify-center rounded-full border border-slate-100 shadow-sm group-hover:border-orange-200 transition-colors">
+                             ${getEmojiOrIcon(iconName)}
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 block uppercase tracking-wide">${label}</span>
+                            <span class="text-sm font-bold ${highlight ? 'text-emerald-700' : 'text-slate-800'}">${item.name}</span>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 group-hover:text-orange-400 transition-colors"></i>
+                `;
+                return div;
+            };
+
+            els.menuContainer.appendChild(createRow('soup', 'Çorba', menu.soup));
+            els.menuContainer.appendChild(createRow('drumstick', 'Ana Yemek', menu.main));
+            els.menuContainer.appendChild(createRow('bowl-steam', 'Yan Lezzet', menu.side));
+            els.menuContainer.appendChild(createRow('glass-water', 'İçecek', menu.drink, true));
+            els.menuContainer.appendChild(createRow('cookie', 'Tatlı', menu.dessert));
+
+            // İpucu
+            const tipDiv = document.createElement('div');
+            tipDiv.className = "bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-500 italic flex gap-2 mt-4";
+            tipDiv.innerHTML = `<span class="text-lg not-italic">💡</span> ${menu.tip}`;
+            els.menuContainer.appendChild(tipDiv);
+        }
+
+        // Basit Emoji/Icon mapping (Lucide icon names or emojis)
+        function getEmojiOrIcon(type) {
+             // Lucide ikonlarını HTML string olarak döndürür
+             // Not: lucide.createIcons() çağrıldığında data-lucide attribute'u svg'ye dönüşür.
+             if(type === 'soup') return '<i data-lucide="soup" class="w-5 h-5 text-slate-600"></i>';
+             if(type === 'drumstick') return '<i data-lucide="drumstick" class="w-5 h-5 text-slate-600"></i>';
+             if(type === 'bowl-steam') return '<i data-lucide="utensils-crossed" class="w-5 h-5 text-slate-600"></i>'; // Bowl yoksa alternatif
+             if(type === 'glass-water') return '<i data-lucide="glass-water" class="w-5 h-5 text-emerald-600"></i>';
+             if(type === 'cookie') return '<i data-lucide="cookie" class="w-5 h-5 text-slate-600"></i>';
+             return '';
+        }
+
+        function renderIcons() {
+            setTimeout(() => {
+                lucide.createIcons();
+            }, 0);
+        }
+
+        // --- MODAL İŞLEMLERİ ---
+        function openModal(item) {
+            els.modalTitle.innerHTML = `<i data-lucide="chef-hat" class="w-5 h-5 text-orange-500 mr-2"></i> ${item.name}`;
+            els.modalDesc.textContent = item.recipe;
+            els.recipeModal.classList.remove('hidden');
+            renderIcons();
+        }
+
+        function closeModal() {
+            els.recipeModal.classList.add('hidden');
+        }
+
+        // --- WHATSAPP ---
+        function shareOnWhatsApp() {
+            const menu = MENU_DATABASE[state.menuIndex];
+            const totalCost = state.peopleCount * MODEST_MEAL_COST_PER_PERSON;
+            
+            const message = `Selamun Aleykum,\n\nRamazan Bereketi ile hesapladim:\nBu aksam ${state.peopleCount} kisi icin zengin bir iftar sofrasi yaklasik ${totalCost} TL tutuyor.\n\nArtan paramizla da bir iyilik yapabiliriz insallah.\n\n*Gunun Menusu:*\n- ${menu.soup.name}\n- ${menu.main.name}\n- ${menu.side.name}\n- ${menu.drink.name}\n- ${menu.dessert.name}\n\nAfiyet, bereket olsun.`;
+            
+            const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // Başlat
+        init();
+
+    </script>
+</body>
+</html>
+
